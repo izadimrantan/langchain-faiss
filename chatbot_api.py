@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
@@ -18,7 +18,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Load FAISS Index
 embeddings = OpenAIEmbeddings()
-vector_db = FAISS.load_local("faiss_index", embeddings)
+vector_db = FAISS.load_local(
+    "faiss_index",
+    embeddings,
+    allow_dangerous_deserialization=True
+)
 
 # Load OpenAI GPT-4 Model
 llm = ChatOpenAI(model_name="gpt-4")
