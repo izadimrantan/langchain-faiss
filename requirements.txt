@@ -2,6 +2,7 @@ fastapi>=0.104.0
 uvicorn[standard]
 langchain>=0.1.8
 langchain-community>=0.0.19
+langchain-openai>=0.0.3
 openai>=1.0.0
 faiss-cpu
 python-dotenv
