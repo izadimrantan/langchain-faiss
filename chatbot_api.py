@@ -40,20 +40,27 @@ prompt = PromptTemplate(
 
 @app.get("/ask")
 def ask(query: str):
-    # URL-encode the query to handle spaces and special characters
-    encoded_query = quote(query)
-    
-    # Search for similar documents
-    similar_docs = vector_db.similarity_search(query, k=3)
-    
-    # Extract text from retrieved documents
-    context = "\n\n".join([doc.page_content for doc in similar_docs])
+    if not vector_db:
+        return {"error": "FAISS index not loaded"}
 
-    # Generate response using LLM
-    chain = LLMChain(llm=llm, prompt=prompt)
-    answer = chain.run(context=context, question=query)
-    
-    return {"answer": answer}
+    try:
+        # URL-encode the query to handle spaces and special characters
+        encoded_query = quote(query)
+        
+        # Search for similar documents
+        similar_docs = vector_db.similarity_search(query, k=3)
+        
+        # Extract text from retrieved documents
+        context = "\n\n".join([doc.page_content for doc in similar_docs])
+
+        # Generate response using LLM
+        chain = LLMChain(llm=llm, prompt=prompt)
+        answer = chain.run(context=context, question=query)
+        
+        return {"answer": answer}
+        
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/ping")
 def ping():
