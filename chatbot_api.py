@@ -17,11 +17,17 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Load FAISS Index
 embeddings = OpenAIEmbeddings()
-vector_db = FAISS.load_local(
-    "faiss_index",
-    embeddings,
-    allow_dangerous_deserialization=True
-)
+try:
+    print("Starting chatbot...")
+    print("Loading FAISS index...")
+    vector_db = FAISS.load_local(
+        "faiss_index",
+        embeddings,
+        allow_dangerous_deserialization=True
+    )
+    print("FAISS index loaded.")
+except Exception as e:
+    print(f"Failed to load FAISS: {e}")
 
 # Load OpenAI GPT-4 Model
 llm = ChatOpenAI(model_name="gpt-4")
